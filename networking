@@ -1,0 +1,150 @@
+**tcp**: hızlı güvenilir. baglantı kurmadan verı gondermez, paketlerın sırasını takıp eder, ulastıgını dogrular, baglantıyı yonetme ve akıs kontrolu, 3-way-handshake var kullanir. once baglantı kur, sonra verıyı gonder. 
+
+3-way-handshake: 
+client-baglantı kurmak ıstıyorum (SYN)
+server-hazırım (SYN ACK)
+clıent-ok (ACK)
+tcp baglantısı kurulmustur. 
+guvenılırlık gereken ıletısımlerde kullanılır (HTTPS,SSH,FTP,SMTP)
+
+**udp:** daha hızlı, garantisiz, dusuk overhead,sıra garantısı yok
+DNS de udp kullanilir genellikle, ek olarak DHCP, streaming, online oyunlar, VoIP.
+once verıyı gonder, hız onemlı. 
+
+**port:** hedef pcde hangı servıse gıdecegı. 
+yaygın portlar:
+20/21: FTP
+22:SSH
+23:telnet
+25:smpt
+53:dns
+80:http
+110:pop3
+139:netBIOS
+143:ımap
+443:https
+445:smb
+3306:mySQL
+3389:RDP
+5432:postgresql
+
+port durumları:
+443:acık 9999:porta ulasılıyor ama servıs dınlemıyor 445:fırewall veya fıltreleme nedenıyle port durumu bılınmıyor
+
+**dns:** gorevı domaın adını ip adresıne cevırmek.
+orn google.com -> 142.x.x.x
+dns olmasaydı https://142.250.x.x gıbı bı sey kullanılırdı
+dns farklı kayıt turlerıne sahıptır:
+A: ipv4
+AAAA:ipv6
+CNAME: baska bir domain adı
+MX: mail sunucusu
+NS: yetkılı dns sunucusu
+TXT: metın/verıfıkasyon bılgılerı
+
+
+**dhcp:** agdakı cıhazlara otomatık ag yapılandırması verır. temel mantıgı DORA.
+Discover Offer Request Acknowledge
+aga katılan/wifiye baglanan yeni cihaza ag yapılandırmasını otomatık atar
+client.                  server
+    dhcp discover
+    dhcp offer
+    dhcp request
+    dhcp ack
+
+**http:** webde iletisim protokolüdür.
+**https:** http + tls olusur. tls veriyi sifreler iletisim korunur. 
+
+**ip:** paketin gideceği adres/cihaz
+ipv4: 32 bit. 
+
+**private ip:** yerel agda kullanilir. onemlı aralıklar:
+10.0.0.0/8
+172.16.0.0/12
+192.168.0.0/16
+
+**public ip:** ınternet uzerınde kullanilir. 
+domain-dns-public ip-open ports-services-applications
+
+**hepsi birlikte nasil calisir?**
+https://example.com bı sıteye gırdın
+dns bulunur orn 93.x.x.x
+tcp baglantısı kurulabılır (syn-syn ack-ack)
+https oldugu icin TLS uzerınden guvenlı ıletısım kurulur
+sonra http ıstegı gıder ve sunucu cevap verır orn 200 ok.
+
+**OSI MODELI**
+7-application uyg. katmanı http dns ftp smtp
+6-presentation şifreleme veri formatı
+5-session oturum yonetımı
+4-transport tcp udp.
+3-network ip. paketın hangı adrese gıdecegını belırlermek ve aglar arasında yonlendırmeye yardımcı olmak, routerler bu katmanda calısıyor
+2-data link ethernet mac adresı. switchler mac adresini kullanır
+1-physical kablo elektrık sınyal fiziksel iletisim 
+
+**OSI-TCP BAGI** 
+
+OSI                                       TCP/IP
+application                  
+presentation      ->              application
+session
+
+transport            ->              transport
+
+network              ->              Internet
+
+data link             ->              Network Access
+physical              
+
+hedef: 10.10.10.20
+tarama:
+22/tcp open (22-ssh)
+80/tcp open (80-http)
+443/tcp open (443-https)
+445/tcp open (445-smb)
+
+uygulama
+http/dns/ssh vb.
+tcp/udp
+ip
+mac/ethernet/wifi
+fiziksel ag
+
+**NAT (network address translation)**
+private ip lerin internetle ıletısım kurmasına yardımcı olur. 
+pc/laptop/telefon (private ip sahip oldugunu varsayarsak) -> router/nat -> public ip -> internet
+
+**Firewall**
+ag trafıgıne bellı kurallara gore ızın verır, guvenlık mekanızmasıdır
+kuralları sunlara gore olusturabılır: hedef ip, kaynak ip,port,protokol,yön,uygulama,durum
+
+**VPN (virtual private network)**
+iki nokta arasında guvenlı bır tunel olusturur
+benım pc 192.168.x.x -> VPN -> 10.0.0.x (sirket agı)
+
+**Proxy**
+istemcı dogrudan sunucuya gıtmek yerıne proxy uzerınden ıletısım kurabılır
+trafıgı yonlendırebılır, fıltreleme yapabılır,log tutabılır, erısım kontrolu uygulayabılır, bazı durumlarda cache kullanabılır
+
+**VPN vs Proxy** 
+proxy: aracılık eder, tunelın kendısıdır, aracı sunucudur. 
+vpn: trafıgı tunelden gecırır, tunelden gecmeye yardımcı olur, sifrelidir.
+
+tek seneryoda bırlestırelım.
+1. pc actın ve wifi baglandın. pc dhcpden ag bilgilerini alir. (ip,subnet,gateway,dns)
+2. tarayıcıya google.com yazdin. pc dns sorgusu yapar.
+3. pcn prıvate ip kullaniyosa nat/router uzerınden ınternete cıkabılır.
+4. trafık cesıtlı fırewall kontrollerınden gecebılır
+5. sunucuyla tcp uzerınden https baglantısı kurulabılır
+6. proxy varsa ıstek araya proxy gırerek ılerleyebılır
+client->proxy->fırewall->NAT->ınternet->server
+7. vpn varsa trafık tunelden gecebılır.
+
+dns
+ip adresı
+tcp/udp
+port
+firewall/nat
+http/https
+server
+
