@@ -1,0 +1,77 @@
+**SIEM (Security Information and Event Management)** farklı sistemlerden gelen güvenlik loglarını **tek bir yerde toplamak, anlamlandırmak, ilişkilendirmek ve şüpheli olaylar için alarm üretmek** amacıyla kullanılan güvenlik platformudur.
+
+Normalde farklı makinelerde farklı loglar vardır örn:
+Windows
+ ├── Login logları
+ ├── Process logları
+ └── Security Events
+
+Linux
+ ├── SSH logları
+ ├── Authentication
+ └── System logs
+
+Network
+ ├── DNS
+ ├── Firewall
+ └── Network events
+SIEM bunları merkezı bır noktada toplar.
+
+Windows ──────┐
+Linux ────────┤
+Firewall ─────┤
+Network ──────┤
+               ▼
+             SIEM
+               │
+       ┌───────┴───────┐
+       ▼               ▼
+    Events           Alerts
+       │               │
+       └───────┬───────┘
+               ▼
+        SOC Analyst
+
+
+### SIEM'in temel görevleri
+
+**1. Log toplama**
+Farklı sistemlerden veri alır.
+
+**2. Merkezi görüntüleme**
+Her şeyi tek yerde görmeni sağlar.
+
+**3. Korelasyon**
+Farklı olayları birbiriyle ilişkilendirir.
+
+**4. Alert / Alarm**
+Belirli kurallara uyan olaylarda uyarı üretir.
+
+**5. Investigation**
+Analistin olayın detaylarını incelemesine yardımcı olur.
+
+# Wazuh nedir?
+**Wazuh**, açık kaynaklı bir security monitoring / SIEM ve XDR platformudur, sistemlerden güvenlik verisi toplayıp bunları analiz etmemize ve şüpheli aktiviteleri tespit etmemize yardımcı olur.
+
+**WAZUH VE SIEM İLİSKİSİ**
+SIEM bir kavram/kategori. Wazuh ise bu kategoride kullanılabilecek bir platform.
+
+SIEM
+│
+├── Wazuh
+├── Splunk
+├── Microsoft Sentinel
+├── IBM QRadar
+└── Elastic Security
+
+**Event Log:**
+> "Ne oldu?"
+
+**Sysmon:**
+> "Ne oldu ve bunun teknik detayları ne?"
+
+**SIEM:**
+> "Farklı kaynaklardan gelen bu olayları merkezi olarak nasıl toplayıp ilişkilendiririz?"
+
+**Wazuh:**
+> "Bunu yapmamıza yardımcı olan açık kaynaklı platformlardan biri."
