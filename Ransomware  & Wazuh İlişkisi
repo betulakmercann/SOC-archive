@@ -1,0 +1,62 @@
+RANSOMWARE HAKKINDA KISACA
+Ransomware, sistemdeki dosyaları şifreleyip kilitleyen ve açmak için fidye isteyen zararlı yazılımdır. En büyük korunma yöntemi düzenli çevrimdışı yedek almak, sistem güncellemelerini aksatmamak ve Wazuh gibi SIEM sistemleriyle anormallikleri anında tespit etmektir.
+
+ADIMLARI
+
+1. **Bulaşma (Infiltration):** genellikle sahte oltalama e-postaları (phishing), zararlı dosya ekleri, tıklandığında zararlı indiren bağlantılar veya sistemdeki açıklar (RDP/port açıkları, güncellenmeyen yazılımlar) üzerinden sisteme sızar
+2. **Şifreleme (Encryption):** sisteme girdikten sonra sessizce çalışır. fotoğrafları, belgeleri, veritabanlarını ve sistem dosyalarını karmaşık şifreleme anahtarlarıyla kilitler.
+3. **Fidye Notu (Ransom Note):** şifreleme bittiğinde masaüstü duvar kağıdını değiştirir veya klasörlerin içine bir txt-html vb.  dosya bırakır. bu notta bazı talimatlar verebilir
+4. **Çift Şantaj (Double Extortion - Günümüz Trendi):** saldırganlar sadece verileri şifrelemekle kalmaz; şifrelemeden önce hassas verileri kendi sunucularına çekerler. fidye ödenmezse verileri internete sızdırmakla tehdit edebilirler
+
+### Wazuh / SIEM Neden Ransomware Karşısında Önemlidir?
+
+Bir ransomware dosyaları şifrelemeye başladığında saniyeler içinde binlerce dosya üzerinde **hızlı okuma/yazma/silme** işlemi yapar.
+
+Wazuh gibi bir SIEM/XDR çözümü:
+
+- **FIM (File Integrity Monitoring):** Dosyalardaki anormallikleri ve toplu değişiklikleri anında tespit eder.
+- **Kural ve Anomali Tespiti:** Bir sürecin (process) kısa sürede çok sayıda dosyayı değiştirdiğini görürse bunu "Ransomware davranışı" olarak bayraklar.
+- **Otomatik Yanıt (Active Response):** Bulaşmayı fark ettiği anda ilgili zararlı süreci (process) otomatik olarak öldürebilir veya enfekte olan cihazı ağdan izole edebilir.
+
+## 3-2-1 Yedekleme Kuralı Nedir?
+
+Ransomware (Fidye yazılımı), donanım arızaları veya doğal afetler karşısında dünyaca kabul görmüş veri yedekleme stratejisidir.
+
+En az 3 kopya veri bulundurun
+2 farklı medya/teknoloji türünde saklayın:**
+En az 1 kopyayı ÇEVRİMDIŞI (Air-Gapped / Off-site) tutun:**
+    
+Mantık (Ransomware İçin En Kritik Adım): Ransomware ağa sızdığında, o ağa bağlı olan tüm bilgisayarları, sunucuları ve ağdaki (ağ anahtarlarına bağlı) yedek ünitelerini tarar ve hepsini şifreler.
+
+Bu 1 yedek; ağla, internetle veya elektrikle hiçbir fiziksel bağı olmayan bir yerde durmalıdır. 
+
+Örn: Haftalık olarak yedeği alınan harici bir hard disk veya farklı bir lokasyondaki bulut depolama. Ransomware kabloyu takip edip çekmecedeki diske erişemez
+
+## MITRE ATT&CK Nedir?
+
+**MITRE ATT&CK** siber saldırganların bir sisteme sızarken, ilerlerken ve zarar verirken kullandığı tüm taktik, teknik ve yöntemlerin ortak bir kütüphanede toplanmış halidir
+
+Siber güvenlik dünyasının **ortak dilidir.** Bir güvenlik uzmanı _"Saldırgan sisteme sızdı"_ demek yerine, _"Saldırgan `T1566`tekniği ile oltalamayı kullandı"_ der
+
+### Neden Bilmek Gerekir?
+
+Saldırganların adım adım ne yapacağını tahmin etmemizi sağlar. Bir saldırı tek bir andan oluşmaz; bir süreçtir. MITRE bu süreci aşamalara ve bu aşamalarda kullanılan yöntemlere böler.
+
+ MITRE ATT&CK Haritası Ransomware Üzerinden Örneklendirme
+
+1. Initial Access (İlk Erişim) - [Kod: T1566]:
+    - Saldırgan şirketteki bir çalışana içinde zararlı Makro bulunan bir Excel dosyası e-postası (Phishing) atar. Çalışan dosyayı açar
+2. Execution (Çalıştırma) - [Kod: T1059]:
+    -  Excel'in arkasındaki zararlı yazılım arka planda `PowerShell` veya `Command Prompt` çalıştırarak sistemde kod yürütür
+3. Defense Evasion (Savunmadan Kaçma) - [Kod: T1562]:
+    - Ransomware, Windows Defender'ı veya antivirüsü devre dışı bırakmaya çalışır
+4. Discovery (Keşif) - [Kod: T1083]:
+    -  Zararlı yazılım bilgisayardaki ve ağdaki klasörleri, paylaşım alanlarını ve yedekleri tarar (Hangi dosyaları şifreleyeceğini belirler)
+5. Impact (Etki) - [Kod: T1486]:
+    - Data Encrypted for Impact — Ransomware tüm dosyaları şifreler, uzantılarını değiştirir ve fidye notunu ekrana basar
+
+### Wazuh ile İlişkisi Nedir?
+
+Wazuh Dashboard'a girdiğinizde hazır bir **MITRE ATT&CK sekmesi/paneli** görürsünüz. Wazuh yakaladığı bir logu veya saldırıyı otomatik olarak bu kodlarla etiketler 
+
+(örneğin: _"Bu log `T1486` ransomware şifreleme davranışıdır der) Böylece saldırganın sürecin hangi aşamasında olduğunu tek bakışta anlarsınız.
