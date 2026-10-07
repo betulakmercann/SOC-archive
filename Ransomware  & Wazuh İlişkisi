@@ -3,10 +3,10 @@ Ransomware, sistemdeki dosyaları şifreleyip kilitleyen ve açmak için fidye i
 
 ADIMLARI
 
-1. **Bulaşma (Infiltration):** genellikle sahte oltalama e-postaları (phishing), zararlı dosya ekleri, tıklandığında zararlı indiren bağlantılar veya sistemdeki açıklar (RDP/port açıkları, güncellenmeyen yazılımlar) üzerinden sisteme sızar
-2. **Şifreleme (Encryption):** sisteme girdikten sonra sessizce çalışır. fotoğrafları, belgeleri, veritabanlarını ve sistem dosyalarını karmaşık şifreleme anahtarlarıyla kilitler.
-3. **Fidye Notu (Ransom Note):** şifreleme bittiğinde masaüstü duvar kağıdını değiştirir veya klasörlerin içine bir txt-html vb.  dosya bırakır. bu notta bazı talimatlar verebilir
-4. **Çift Şantaj (Double Extortion - Günümüz Trendi):** saldırganlar sadece verileri şifrelemekle kalmaz; şifrelemeden önce hassas verileri kendi sunucularına çekerler. fidye ödenmezse verileri internete sızdırmakla tehdit edebilirler
+1. Bulaşma (Infiltration): genellikle sahte oltalama e-postaları (phishing), zararlı dosya ekleri, tıklandığında zararlı indiren bağlantılar veya sistemdeki açıklar (RDP/port açıkları, güncellenmeyen yazılımlar) üzerinden sisteme sızar
+2. Şifreleme (Encryption): sisteme girdikten sonra sessizce çalışır. fotoğrafları, belgeleri, veritabanlarını ve sistem dosyalarını karmaşık şifreleme anahtarlarıyla kilitler.
+3. Fidye Notu (Ransom Note): şifreleme bittiğinde masaüstü duvar kağıdını değiştirir veya klasörlerin içine bir txt-html vb.  dosya bırakır. bu notta bazı talimatlar verebilir
+4. Çift Şantaj (Double Extortion - Günümüz Trendi): saldırganlar sadece verileri şifrelemekle kalmaz; şifrelemeden önce hassas verileri kendi sunucularına çekerler. fidye ödenmezse verileri internete sızdırmakla tehdit edebilirler
 
 ### Wazuh / SIEM Neden Ransomware Karşısında Önemlidir?
 
@@ -14,17 +14,17 @@ Bir ransomware dosyaları şifrelemeye başladığında saniyeler içinde binler
 
 Wazuh gibi bir SIEM/XDR çözümü:
 
-- **FIM (File Integrity Monitoring):** Dosyalardaki anormallikleri ve toplu değişiklikleri anında tespit eder.
-- **Kural ve Anomali Tespiti:** Bir sürecin (process) kısa sürede çok sayıda dosyayı değiştirdiğini görürse bunu "Ransomware davranışı" olarak bayraklar.
-- **Otomatik Yanıt (Active Response):** Bulaşmayı fark ettiği anda ilgili zararlı süreci (process) otomatik olarak öldürebilir veya enfekte olan cihazı ağdan izole edebilir.
+- FIM (File Integrity Monitoring): Dosyalardaki anormallikleri ve toplu değişiklikleri anında tespit eder.
+- Kural ve Anomali Tespiti: Bir sürecin (process) kısa sürede çok sayıda dosyayı değiştirdiğini görürse bunu "Ransomware davranışı" olarak bayraklar.
+- Otomatik Yanıt (Active Response): Bulaşmayı fark ettiği anda ilgili zararlı süreci (process) otomatik olarak öldürebilir veya enfekte olan cihazı ağdan izole edebilir.
 
 ## 3-2-1 Yedekleme Kuralı Nedir?
 
 Ransomware (Fidye yazılımı), donanım arızaları veya doğal afetler karşısında dünyaca kabul görmüş veri yedekleme stratejisidir.
 
 En az 3 kopya veri bulundurun
-2 farklı medya/teknoloji türünde saklayın:**
-En az 1 kopyayı ÇEVRİMDIŞI (Air-Gapped / Off-site) tutun:**
+2 farklı medya/teknoloji türünde saklayın:
+En az 1 kopyayı ÇEVRİMDIŞI (Air-Gapped / Off-site) tutun:
     
 Mantık (Ransomware İçin En Kritik Adım): Ransomware ağa sızdığında, o ağa bağlı olan tüm bilgisayarları, sunucuları ve ağdaki (ağ anahtarlarına bağlı) yedek ünitelerini tarar ve hepsini şifreler.
 
@@ -34,9 +34,9 @@ Bu 1 yedek; ağla, internetle veya elektrikle hiçbir fiziksel bağı olmayan bi
 
 ## MITRE ATT&CK Nedir?
 
-**MITRE ATT&CK** siber saldırganların bir sisteme sızarken, ilerlerken ve zarar verirken kullandığı tüm taktik, teknik ve yöntemlerin ortak bir kütüphanede toplanmış halidir
+MITRE ATT&CK siber saldırganların bir sisteme sızarken, ilerlerken ve zarar verirken kullandığı tüm taktik, teknik ve yöntemlerin ortak bir kütüphanede toplanmış halidir
 
-Siber güvenlik dünyasının **ortak dilidir.** Bir güvenlik uzmanı _"Saldırgan sisteme sızdı"_ demek yerine, _"Saldırgan `T1566`tekniği ile oltalamayı kullandı"_ der
+Siber güvenlik dünyasının ortak dilidir. Bir güvenlik uzmanı _"Saldırgan sisteme sızdı"_ demek yerine, _"Saldırgan `T1566`tekniği ile oltalamayı kullandı"_ der
 
 ### Neden Bilmek Gerekir?
 
@@ -57,6 +57,6 @@ Saldırganların adım adım ne yapacağını tahmin etmemizi sağlar. Bir sald�
 
 ### Wazuh ile İlişkisi Nedir?
 
-Wazuh Dashboard'a girdiğinizde hazır bir **MITRE ATT&CK sekmesi/paneli** görürsünüz. Wazuh yakaladığı bir logu veya saldırıyı otomatik olarak bu kodlarla etiketler 
+Wazuh Dashboard'a girdiğinizde hazır bir MITRE ATT&CK sekmesi/paneli görürsünüz. Wazuh yakaladığı bir logu veya saldırıyı otomatik olarak bu kodlarla etiketler 
 
 (örneğin: _"Bu log `T1486` ransomware şifreleme davranışıdır der) Böylece saldırganın sürecin hangi aşamasında olduğunu tek bakışta anlarsınız.
