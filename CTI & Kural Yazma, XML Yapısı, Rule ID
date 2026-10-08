@@ -1,0 +1,74 @@
+# CTI KURALLR YAZMA, XML YAPISI VE RULE ID
+Wazuh'un kalbi sayılan **Kurallar (Rules)**, tespit motorunun gelen logları analiz edip bir uyarı (alert) üretip üretmeyeceğine karar verdiği mantıksal yapılardır
+
+## 1. Rule ID Mantığı (Kural Kimliği ve Arama Aralığı)
+
+Wazuh'ta yazılan her kuralın unique/eşsiz bir kimlik numarası **(Rule ID)** olmak zorundadır. Wazuh sistemdeki karışıklığı önlemek için bu ID'leri belirli aralıklara bölmüştür
+
+0-99.999 arası varsayılan/sistem kuralları için. Wazuh ile hazır gelen, varsayılan sistem ve güvenlik kurallarıdır. Bu kuralların dosyaları doğrudan değiştirilmez/düzenlenmez
+
+100.000+ özel/user kuralları için. Bizim (analistlerin/yöneticilerin) yazdığı tüm **özel (custom) kurallar** 100.000 ve üzeri bir ID almak zorundadır (Örn: `100001`, `100002`)
+
+ÖNEMLİ: Kendi yazdığınız veya düzenlediğiniz kurallar her zaman `/var/ossec/etc/rules/local_rules.xml`dosyasına yazılır ve ID'si `100000`'den başlar.
+
+## 2. Wazuh Kuralının XML Yapısı
+
+Wazuh kuralları standart XML formatında yazılır
+
+<group name="syslog,sshd,">
+  <rule id="100001" level="10">
+    <if_sid>5716</if_sid>
+    <match>Failed password</match>
+    <description>Bir kullanıcı için üste üste hatalı SSH girişi tespit edildi!</description>
+    <mitre>
+      <id>T1110</id> 
+    </mitre>
+  </rule>
+</group>
+
+
+### Temel Etiketlerin (Tag) Anlamları:
+
+- `<group>`: Kuralları kategorize eder (örn: `windows`, `syslog`, `firewall`, `web`)
+- `<rule id="..." level="...">`:
+    - `id`: Kuralın benzersiz numarası.
+    - `level`: tehditlerin dereceleri
+        - 0: bilgilendirme/önemsiz
+        - 1-3: düşük seviye
+        - 4-6: orta seviye/medium
+        - 7-9: yüksek seviye/high
+        - 10-12: çok yüksek seviye/very high
+        - 13-15: kritik seviye/critical
+
+- `<if_sid>` (If Same ID / Bağımlılık): kuralın tetiklenmesi için önce başka bir kuralın çalışmış olması gerektiğini belirtir (Kural hiyerarşisi, korelasyon sağlar)
+- `<match>` veya `<regex>`: log metninin içinde hangi kelimenin veya kalıbın aranacağını belirler
+- `<description>`: kural tetiklendiğinde Wazuh Dashboard ekranında yazacak olan açıklama metnidir
+- `<mitre>`: kuralın hangi MITRE ATT&CK tekniğine (Örn: `T1110` - Brute Force) karşılık geldiğini etiketler
+
+
+## RULE ID ÖRNEKLERİ 
+
+### 1. Hazır Sistem Kuralları Örnekleri (ID: 0 – 99.999)
+
+| Rule ID     | Kategori / Servis         | Leve           | Kuralın Anlamı ve Açıklaması                                                                                              |
+| ----------- | ------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **`5710`**  | SSH (Linux)               | 5              | **SSH bağlantı denemesi başarısız oldu (Failed SSH login).** Yanlış parola girildiğinde tetiklenir                        |
+| **`5712`**  | SSH (Linux)               | 10             | **SSHD Brute Force Saldırısı.** Üst üste birden fazla başarısız SSH girişi yapıldığında tetiklenir                        |
+| **`60106`** | Windows Event             | 3              | **Kullanıcı oturum açtı (Event ID 4624).** Başarılı bir Windows oturum açma olayıdır                                      |
+| **`60107`** | Windows Event             | 5              | **Hatalı parola ile oturum açma denemesi (Event ID 4625).** Windows'ta başarısız giriş denemesidir                        |
+| **`60115`** | Windows Event             | 10             | **Kullanıcı hesabı kilitlendi (Event ID 4740).** Çok fazla hatalı deneme sonucu hesabın kilitlendiğini bildirir           |
+| **`550`**   | FIM (Dosya İzleme)        | 7              | **İzlenen bir dosyanın içeriği değişti.** Sistemdeki kritik bir dosyanın (ör. `/etc/passwd`) değiştirildiğini haber verir |
+| **`31101`** | Web Server (Apache/Nginx) | 5              | **HTTP 404 - Sayfa Bulunamadı.** Web sunucusunda olmayan bir sayfaya istek atıldığını gösterir                            |
+
+### 2. Özel (Custom) Kural ID Örnekleri (ID: 100.000+)
+
+|Custom Rule ID  |Kategori                |Level   |Kuralın Anlamı ve Amacı|
+|------------    |----------------------- |------- |------------------------------------------------------------------------------------------------------------------------- |
+|**`100001`**    |SSH / Güvenlik          |8       |**Yüksek Öncelikli SSH Başarısız Giriş:** Varsayılan `5710` kuralının önem seviyesi yükseltilerek kritik sunuculara yapılan başarısız SSH denemeleri için özel alarm üretilir.|
+|**`100002`**    |Ransomware / FIM        |14      |**Yem (Canary) Dosya Değişikliği:** Sistemdeki sahte finans dosyası (`000_FINANS_2026.xlsx`) değiştirildiği an fidye yazılımı şüphesiyle kritik seviye alarm tetiklenir.|
+|**`100003`**    |Windows / Hesap Yönetimi|12      |**Kritik Yedek Hesabının Silinmesi:** Windows üzerinde `admin_backup` isimli kritik yönetici hesabı silindiğinde güvenlik ekibine anlık bildirim düşer.|
+|**`100004`**    |Web / Güvenlik          |10      |**Web Sunucusuna SQL Injection Denemesi:** Web loglarında (`access.log`) `UNION SELECT` veya `' OR '1'='1` kalıpları tespit edildiğinde veritabanı saldırısı uyarısı verilir.|
+|**`100005`**    |Sistem / Yetki Yükseltme|11      |**Mesai Saatleri Dışında `sudo` Kullanımı:** Şirket politikası gereği gece saatlerinde (00:00 - 06:00) bir kullanıcının root yetkisi (`sudo su`) alması durumunda izinsiz yetki yükseltme alarmı üretilir.|
+
+- Tablodaki tüm ID'ler **100.000** ile başlar; çünkü Wazuh bu aralığı tamamen analistlerin kendi ortamlarına özel kurallar yazabilmesi için ayırmıştır
+- Bu kuralların tamamı Ubuntu üzerindeki `/var/ossec/etc/rules/local_rules.xml` dosyasına yazılır (nano ile)
