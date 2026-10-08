@@ -1,0 +1,14 @@
+# WAZUHTA KURALLARI YAZDIKTAN SONRA KONTROL
+
+1-önce kuralınızın doğruluğundan emin olun 
+komut : sudo /var/ossec/bin/wazuh-analysisd -t
+eğer çıktı "Configuration OK" veya boş dönüyorsa dosyada yazım hatası yoktur
+
+2-yeni kuralların yüklenebilmesi için servisi yeniden başlatın
+komut: sudo systemctl restart wazuh-manager
+
+3-wazuh dashboard üzerinden kontrol et
+arayüze git
+sol menüden management sekmesinden rules kısmına gel
+arama kısmına kendi kural id ni yaz
+eğer listede aktif/enabled görünüyosa canlı sistemde çalışmaya başlamıştır
