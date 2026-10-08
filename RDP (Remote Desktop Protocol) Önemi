@@ -1,0 +1,22 @@
+# RDP HAKKINDA
+**RDP (Remote Desktop Protocol - Uzaktan Masaüstü Protokolü)**, Microsoft tarafından geliştirilen ve bir bilgisayara/sunucuya grafik arayüzü (GUI) üzerinden uzaktan bağlanmanızı sağlayan bir protokoldür. Windows sistemlerde varsayılan olarak **3389 numaralı portu** kullanır.
+
+### 1. RDP Neden Bu Kadar Önemlidir?
+
+- **En Popüler Saldırı Yüzeyi:** Siber saldırganların bir kurumun içine sızmak için en çok taradığı ve saldırdığı portların başında 3389 (RDP) gelir.
+- **Brute Force (Kaba Kuvvet) Hedefi:** İnternete açık bırakılmış bir RDP portu, saldırgan botlar tarafından sürekli olarak parola denemelerine (parola püskürtme / brute force) maruz kalır.
+- **Ransomware Bulaşma Yolu:** Fidye yazılımlarının (Ransomware) şirket ağlarına sızmasındaki **1 numaralı ilk erişim (Initial Access)** yöntemlerinden biri ele geçirilmiş RDP hesaplarıdır.
+
+### 2. RDP'nin Wazuh ile Alakası ve Rolü Nedir?
+Wazuh, Windows sunucularda veya istemcilerde gerçekleşen tüm RDP hareketlerini anlık olarak izler, analiz eder ve bir anomali durumunda alarm üretir. Wazuh'un RDP izlemesindeki temel görevleri şunlardır:
+
+#### A. Başarısız Giriş Denemelerini ve Brute Force Saldırılarını Yakalamak
+Bir saldırgan RDP üzerinden sunucunuza sürekli şifre deniyorsa, Windows Event Log'larda `4625` (Başarısız Oturum) olayı oluşur.
+
+- **Wazuh ne yapar?:** Wazuh Agent bu logları toplar. Örneğin 1 dakika içinde 10 tane başarısız RDP girişi gördüğünde kural tetiklenir ve Wazuh Dashboard'da **"RDP Brute Force Saldırısı Tespit Edildi!"** uyarısı basar (MITRE ATT&CK: `T1110`)
+#### B. Başarılı RDP Girişlerini İzlemek
+Bir saldırgan şifreyi doğru bildiğinde Windows `4624` (Başarılı Oturum - Logon Type 10) logu üretir.
+
+- **Wazuh ne yapar?:** Mesai saatleri dışında (örneğin gece 03:00'te) veya yetkisiz bir IP adresinden yapılan başarılı RDP bağlantılarını tespit edip yüksek seviyeli alarm verir.
+#### C. Otomatik Yanıt (Active Response) Verme
+Wazuh sadece izlemez, müdahale de eder. RDP üzerinden kaba kuvvet saldırısı yapan IP adresini tespit ettiği an Windows Firewall üzerinde kural oluşturarak o saldırganın IP adresini otomatik olarak engeller (Block IP)
