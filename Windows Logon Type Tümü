@@ -1,0 +1,19 @@
+# LOGON TYPE TÜMÜ
+Windows işletim sisteminde oturum açma yöntemlerini belirten tüm **Logon Type** kodları ve anlamları:
+
+| Logon Type | Adı                         | Açıklama ve Kullanım Senaryosu                                                                                                        |
+| ---------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **2**      | **Interactive**             | Kullanıcının fiziksel olarak bilgisayar/sunucu karşısına geçip klavye ve ekran kullanarak oturum açması.                              |
+| **3**      | **Network**                 | Ağ üzerinden bir kaynağa erişim (Örn: Ortak klasörler `\\paylasim`, yazıcılar veya NLA ile yapılan RDP ağ aşaması).                   |
+| **4**      | **Batch**                   | Arka planda zamanlanmış bir görevin (**Scheduled Task**) bir kullanıcı hesabı adına çalıştırılması.                                   |
+| **5**      | **Service**                 | Sistemdeki bir servisin (**Windows Service**) tanımlanan bir servis hesabı yetkisiyle başlatılması.                                   |
+| **7**      | **Unlock**                  | Ekranı kilitli olan (Lock Screen) bir bilgisayarın parolasının girilerek kilidinin açılması.                                          |
+| **8**      | **NetworkCleartext**        | Parolanın ağ üzerinden **şifrelenmeden (Açık Metin / Cleartext)** gönderildiği oturumlar (Örn: Standart IIS Basic Authentication).    |
+| **9**      | **NewCredentials**          | `runas /netonly` komutuyla bir kullanıcının yerel haklarını değiştirmeden ağ kaynakları için farklı kimlik bilgisi kullanması.        |
+| **10**     | **RemoteInteractive**       | **Remote Desktop Protocol (RDP)** veya Terminal Services ile grafik arayüz üzerinden uzaktan oturum açılması.                         |
+| **11**     | **CachedInteractive**       | Bilgisayarın Etki Alanı (Domain Controller) ağında olmadığı durumlarda önceden önbelleğe alınmış (cached) bilgilerle giriş yapılması. |
+| **12**     | **CachedRemoteInteractive** | RDP bağlantısının önbelleğe alınmış kimlik bilgileriyle yapılması.                                                                    |
+| **13**     | **CachedUnlock**            | Kilitli ekranın önbellekteki kimlik bilgileriyle açılması.                                                                            |
+ Logon Type 1 (System): Çok eski Windows sürümlerinde (Windows NT dönemi) sistemin kendi iç süreçleri için kullanılıyordu. Modern Windows sürümlerinde  kullanımdan kaldırıldı (Deprecated)
+ 
+ Logon Type 6 (Proxy): Eski Windows mimarilerinde proxy tabanlı kimlik doğrulamalar için ayrılmıştı, güncel sistemlerde aktif olarak kullanılmıyor
