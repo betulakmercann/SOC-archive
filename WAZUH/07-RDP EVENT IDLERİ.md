@@ -1,0 +1,47 @@
+# WINDOWS RDP EVENT ID'LERİ
+
+Windows'ta Remote Desktop Protocol (RDP) süreçlerini izlerken kullanılan en kritik Event ID'ler **Windows Event Viewer (Olay Görüntüleyici)** içindeki **Security** ve **TerminalServices-LocalSessionManager** log kanallarından toplanır.
+
+---
+
+## 1. Kimlik Doğrulama ve Oturum Açma Olayları (Security Log)
+
+Bu loglar `Security` kanalı altında tutulur ve RDP üzerinden yapılan giriş denemelerini gösterir.
+
+* **`4624`** | **Security** | **Başarılı Oturum Açma:** RDP için `LogonType = 10` (Remote Interactive) veya `LogonType = 3` (Network / NLA) değerine bakılır.
+* **`4625`** | **Security** | **Başarısız Oturum Açma:** Hatalı parola, geçersiz kullanıcı veya RDP bağlantı reddi durumunda tetiklenir (`LogonType = 10`).
+* **`4634`** | **Security** | **Oturum Kapatma (Logoff):** Kullanıcı sistemden güvenli şekilde çıkış yaptı.
+* **`4647`** | **Security** | **Kullanıcı Başlatmalı Çıkış:** Kullanıcının "Sign out / Log off" seçeneğine tıklayarak çıkış yaptığını bildirir.
+* **`4778`** | **Security** | **Oturuma Yeniden Bağlanma (Reconnected):** Kopan veya askıda kalan RDP oturumuna tekrar bağlandığını gösterir.
+* **`4779`** | **Security** | **Oturumun Bağlantısını Kesme (Disconnected):** Kullanıcı oturumu kapatmadı, sadece RDP penceresini kapattı.
+
+---
+
+## 2. RDP Oturum Yaşam Döngüsü (LocalSessionManager)
+
+Bu loglar `Applications and Services Logs -> Microsoft -> Windows -> TerminalServices-LocalSessionManager -> Operational` altındadır. RDP bağlantısının teknik durumunu doğrudan gösterir.
+
+* **`21`** | **RDP Session Logon Successful:** RDP oturumu başarıyla oluşturuldu ve masaüstü yüklendi.
+* **`22`** | **RDP Shell Start:** RDP arayüzü (`explorer.exe`) kullanıcıya sunuldu.
+* **`23`** | **RDP Session Logoff:** Kullanıcı RDP oturumunu tamamen kapattı.
+* **`24`** | **RDP Session Disconnected:** RDP bağlantısı kesildi (pencere kapatıldı ama oturum arka planda açık).
+* **`25`** | **RDP Session Reconnection:** Kesilen RDP oturumuna başarıyla geri bağlanıldı.
+
+---
+
+## 3. Ağ Bağlantı Seviyesi Olayları (RemoteConnectionManager)
+
+Bu loglar `Applications and Services Logs -> Microsoft -> Windows -> TerminalServices-RemoteConnectionManager -> Operational` altındadır. Kimlik doğrulamadan önceki **ilk ağ temasını** gösterir.
+
+* **`1149`** | **RDP Authentication Succeeded:** Ağ seviyesinde kimlik doğrulama (NLA) başarılı oldu (Oturum açılmadan önceki aşama).
+* **`261`** | **RDP Listener Error:** RDP servisinin 3389 portunu dinlerken hata alması veya bağlantının ağ seviyesinde düşmesi.
+
+---
+
+## Özet Analiz Kriteri
+
+RDP Brute Force ve yetkisiz erişim analizlerinde en sık kullanacağınız filtre **Event ID 4625 + LogonType 10** birleşimidir:
+
+* **Event ID: 4625**
+* **Logon Type: 10** $\rightarrow$ Doğrudan RDP Başarısız Girişi (Brute Force İndikatörü)
+* **Logon Type: 3** $\rightarrow$ NLA (Network Level Authentication) Başarısız Girişi
