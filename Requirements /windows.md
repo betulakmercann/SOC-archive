@@ -1,15 +1,15 @@
 Windows
-│
+
 ├── User
-│
+
 ├── Applications
-│
+
 ├── Processes
-│
+
 ├── Services
-│
+
 ├── Registry
-│
+
 └── Windows Kernel
 
 **kernel:** isletim sisteminin cekirdegidir. donanım ve sistem kaynaklarıyla uygulamalar arasında onemlı bı katman gorevı gorur. 
@@ -57,10 +57,15 @@ Get-LocalUser (yerel kullanıcıları gosterır)
 onemlı yapılandırma bılgılerı tutulan merkezı verıtabanı.
 Windows Registry
 │
+
 ├── System settings
+
 ├── User settings
+
 ├── Software settings
+
 ├── Startup-related configuration
+
 └── Other configuration data
 bırcok sıstem ve uygulama regıstry ıle ılıskılıdır.
 
@@ -114,21 +119,33 @@ Process activity vb.
 **Active Directory**
 wındows kullanıcılarını, pcleri, grupları ve cesitli kaynakları merkezı olarak yonetmeye yarayan mıcrosoft dızın hızmetıdır.
 orn:
+
 Company
-│
+
 ├── Users
-│   ├── Ahmet
-│   ├── Mehmet
-│   └── Ayşe
-│
+
+    ├── Ahmet
+
+    ├── Mehmet
+
+    └── Ayşe
+
+
 ├── Computers
-│   ├── PC-01
-│   ├── PC-02
-│   └── PC-03
-│
+
+    ├── PC-01
+
+    ├── PC-02
+
+    └── PC-03
+
+
 └── Groups
+     
     ├── IT
+    
     ├── HR
+    
     └── Security
 
 **Domain Controller (DC)**
