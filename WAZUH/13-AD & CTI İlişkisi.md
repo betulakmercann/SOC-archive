@@ -54,14 +54,19 @@ BloodHound saldırgana şunu söyler: _"Ahmet kullanıcısının hiçbir yetkis
 #### Aşama 4: Yanal İlerleme (Lateral Movement & Pass-the-Hash)
 
 Ele geçirilen `SQL-SVC` hesabı yetkileriyle ağdaki diğer sunuculara sıçranır.
+
 Saldırgan **Impacket** veya **psexec** aracını kullanarak `SQL-SVC` kimliğiyle SQL Sunucusuna bağlanır. Burada bellekte (RAM) çalışan **LSASS** sürecini **Mimikatz** aracıyla okur.
+
 SQL sunucusuna önceden bakım yapmak için giren Sistem Yöneticisi Mehmet Bey'in (Domain Admin) şifre hash'i bellekten çalınır.
 
 #### Aşama 5: Domain Dominance (Tam Kontrol & DCSync)
 
 Saldırgan artık Domain Admin yetkisine sahip olan Mehmet Bey'in kimliğine bürünmüştür.
+   
     1. Saldırgan **DCSync** tekniğini kullanır; Domain Controller'a _"Ben de bir Domain Controller'ım, bana tüm kullanıcıların şifre hash'lerini senkronize et"_ komutunu gönderir.
+   
     2. Active Directory veri tabanındaki  tüm CEO, İK, Sistem Yöneticisi şifrelerini çeker.
+    
     3. Ardından **Golden Ticket** (Altın Bilet) oluşturur. Bu bilet sayesinde AD üzerindeki şifreler değişse bile saldırgan süresiz ve izlenemez bir arka kapı (Backdoor) elde etmiş olur.
 
 
